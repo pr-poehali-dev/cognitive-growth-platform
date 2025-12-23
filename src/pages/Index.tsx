@@ -14,13 +14,20 @@ interface UserProgress {
   achievements: string[];
 }
 
+interface Task {
+  id: string;
+  title: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  xp: number;
+}
+
 interface TrainingCategory {
   id: string;
   name: string;
   icon: string;
   color: string;
   description: string;
-  tasks: number;
+  tasks: Task[];
 }
 
 const Index = () => {
@@ -39,7 +46,13 @@ const Index = () => {
       icon: 'Eye',
       color: 'bg-blue-500',
       description: 'Упражнения на концентрацию и фокус',
-      tasks: 12,
+      tasks: [
+        { id: '1', title: 'Найди отличия', difficulty: 'easy', xp: 10 },
+        { id: '2', title: 'Следи за предметом', difficulty: 'easy', xp: 10 },
+        { id: '3', title: 'Лабиринт концентрации', difficulty: 'medium', xp: 20 },
+        { id: '4', title: 'Считаем объекты', difficulty: 'medium', xp: 20 },
+        { id: '5', title: 'Запомни порядок', difficulty: 'hard', xp: 30 },
+      ],
     },
     {
       id: 'memory',
@@ -47,7 +60,13 @@ const Index = () => {
       icon: 'Brain',
       color: 'bg-purple-500',
       description: 'Развитие кратковременной и долговременной памяти',
-      tasks: 15,
+      tasks: [
+        { id: '6', title: 'Парные карточки', difficulty: 'easy', xp: 10 },
+        { id: '7', title: 'Запомни список', difficulty: 'easy', xp: 10 },
+        { id: '8', title: 'Цепочка слов', difficulty: 'medium', xp: 20 },
+        { id: '9', title: 'Последовательность чисел', difficulty: 'medium', xp: 20 },
+        { id: '10', title: 'Мнемотехника', difficulty: 'hard', xp: 30 },
+      ],
     },
     {
       id: 'hemispheres',
@@ -55,7 +74,12 @@ const Index = () => {
       icon: 'Puzzle',
       color: 'bg-pink-500',
       description: 'Синхронизация работы полушарий мозга',
-      tasks: 10,
+      tasks: [
+        { id: '11', title: 'Рисуем двумя руками', difficulty: 'easy', xp: 10 },
+        { id: '12', title: 'Цвет и слово', difficulty: 'medium', xp: 20 },
+        { id: '13', title: 'Зеркальное письмо', difficulty: 'medium', xp: 20 },
+        { id: '14', title: 'Перекрёстные движения', difficulty: 'hard', xp: 30 },
+      ],
     },
     {
       id: 'reading',
@@ -63,7 +87,12 @@ const Index = () => {
       icon: 'BookOpen',
       color: 'bg-green-500',
       description: 'Увеличение скорости чтения и понимания',
-      tasks: 8,
+      tasks: [
+        { id: '15', title: 'Читаем по слогам', difficulty: 'easy', xp: 10 },
+        { id: '16', title: 'Таблица Шульте', difficulty: 'medium', xp: 20 },
+        { id: '17', title: 'Быстрый поиск слов', difficulty: 'medium', xp: 20 },
+        { id: '18', title: 'Расширение поля зрения', difficulty: 'hard', xp: 30 },
+      ],
     },
     {
       id: 'thinking',
@@ -71,7 +100,13 @@ const Index = () => {
       icon: 'Lightbulb',
       color: 'bg-yellow-500',
       description: 'Развитие креативного и критического мышления',
-      tasks: 11,
+      tasks: [
+        { id: '19', title: 'Что лишнее?', difficulty: 'easy', xp: 10 },
+        { id: '20', title: 'Придумай историю', difficulty: 'easy', xp: 10 },
+        { id: '21', title: 'Ассоциации', difficulty: 'medium', xp: 20 },
+        { id: '22', title: 'Решение задач', difficulty: 'medium', xp: 20 },
+        { id: '23', title: 'Креативное мышление', difficulty: 'hard', xp: 30 },
+      ],
     },
     {
       id: 'logic',
@@ -79,7 +114,13 @@ const Index = () => {
       icon: 'Boxes',
       color: 'bg-orange-500',
       description: 'Решение логических задач и головоломок',
-      tasks: 13,
+      tasks: [
+        { id: '24', title: 'Простые узоры', difficulty: 'easy', xp: 10 },
+        { id: '25', title: 'Продолжи ряд', difficulty: 'easy', xp: 10 },
+        { id: '26', title: 'Судоку для детей', difficulty: 'medium', xp: 20 },
+        { id: '27', title: 'Головоломки', difficulty: 'medium', xp: 20 },
+        { id: '28', title: 'Шахматные задачи', difficulty: 'hard', xp: 30 },
+      ],
     },
   ];
 
@@ -163,10 +204,29 @@ const Index = () => {
                     </div>
                     <div className="flex-1">
                       <h3 className="font-bold text-xl mb-1">{category.name}</h3>
-                      <Badge variant="outline">{category.tasks} заданий</Badge>
+                      <Badge variant="outline">{category.tasks.length} заданий</Badge>
                     </div>
                   </div>
                   <p className="text-muted-foreground mb-4">{category.description}</p>
+                  <div className="space-y-2 mb-4">
+                    {category.tasks.slice(0, 3).map((task) => (
+                      <div key={task.id} className="flex items-center justify-between text-sm">
+                        <span className="text-foreground/70">{task.title}</span>
+                        <Badge
+                          variant="secondary"
+                          className={`text-xs ${
+                            task.difficulty === 'easy'
+                              ? 'bg-green-100 text-green-700'
+                              : task.difficulty === 'medium'
+                              ? 'bg-yellow-100 text-yellow-700'
+                              : 'bg-red-100 text-red-700'
+                          }`}
+                        >
+                          {task.difficulty === 'easy' ? '★' : task.difficulty === 'medium' ? '★★' : '★★★'}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
                   <Button className="w-full text-lg py-6" size="lg">
                     Начать тренировку
                   </Button>
