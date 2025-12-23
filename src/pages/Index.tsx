@@ -249,7 +249,7 @@ const Index = () => {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h1 className="text-4xl font-bold text-primary mb-2">BreinUP 🧠</h1>
-              <p className="text-muted-foreground text-lg">Платформа развития когнитивных способностей</p>
+              <p className="text-muted-foreground text-lg">Не любишь учиться? BreinUP поможет тебе прокачать свой мозг, так, чтобы любое домашнее задание было лёгким</p>
             </div>
             <div className="flex items-center gap-4">
               <Badge variant="secondary" className="text-lg px-4 py-2">
