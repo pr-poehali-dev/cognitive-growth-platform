@@ -5,6 +5,12 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
+import AttentionGame from '@/components/games/AttentionGame';
+import MemoryGame from '@/components/games/MemoryGame';
+import LogicGame from '@/components/games/LogicGame';
+import ReadingGame from '@/components/games/ReadingGame';
+import ThinkingGame from '@/components/games/ThinkingGame';
+import HemispheresGame from '@/components/games/HemispheresGame';
 
 interface UserProgress {
   level: number;
@@ -31,13 +37,31 @@ interface TrainingCategory {
 }
 
 const Index = () => {
-  const [userProgress] = useState<UserProgress>({
+  const [userProgress, setUserProgress] = useState<UserProgress>({
     level: 5,
     xp: 340,
     xpToNextLevel: 500,
     completedTasks: 47,
     achievements: ['Первый шаг', 'Неделя подряд', 'Мастер внимания'],
   });
+  const [activeGame, setActiveGame] = useState<string | null>(null);
+
+  const handleGameComplete = (categoryId: string, score: number) => {
+    setUserProgress((prev) => {
+      const newXp = prev.xp + score;
+      const newLevel = newXp >= prev.xpToNextLevel ? prev.level + 1 : prev.level;
+      const newXpToNext = newLevel > prev.level ? prev.xpToNextLevel + 200 : prev.xpToNextLevel;
+      
+      return {
+        ...prev,
+        xp: newXp >= prev.xpToNextLevel ? newXp - prev.xpToNextLevel : newXp,
+        level: newLevel,
+        xpToNextLevel: newXpToNext,
+        completedTasks: prev.completedTasks + 1,
+      };
+    });
+    setActiveGame(null);
+  };
 
   const categories: TrainingCategory[] = [
     {
@@ -140,13 +164,91 @@ const Index = () => {
     { name: 'Ты', level: userProgress.level, xp: userProgress.xp, rank: 15 },
   ];
 
+  if (activeGame === 'attention') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-8">
+        <div className="container mx-auto px-4">
+          <AttentionGame
+            onComplete={(score) => handleGameComplete('attention', score)}
+            onClose={() => setActiveGame(null)}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (activeGame === 'memory') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-8">
+        <div className="container mx-auto px-4">
+          <MemoryGame
+            onComplete={(score) => handleGameComplete('memory', score)}
+            onClose={() => setActiveGame(null)}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (activeGame === 'logic') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-8">
+        <div className="container mx-auto px-4">
+          <LogicGame
+            onComplete={(score) => handleGameComplete('logic', score)}
+            onClose={() => setActiveGame(null)}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (activeGame === 'reading') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-8">
+        <div className="container mx-auto px-4">
+          <ReadingGame
+            onComplete={(score) => handleGameComplete('reading', score)}
+            onClose={() => setActiveGame(null)}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (activeGame === 'thinking') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-8">
+        <div className="container mx-auto px-4">
+          <ThinkingGame
+            onComplete={(score) => handleGameComplete('thinking', score)}
+            onClose={() => setActiveGame(null)}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (activeGame === 'hemispheres') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-8">
+        <div className="container mx-auto px-4">
+          <HemispheresGame
+            onComplete={(score) => handleGameComplete('hemispheres', score)}
+            onClose={() => setActiveGame(null)}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         <header className="mb-8 animate-fade-in">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-4xl font-bold text-primary mb-2">КогниКидс 🧠</h1>
+              <h1 className="text-4xl font-bold text-primary mb-2">BreinUP 🧠</h1>
               <p className="text-muted-foreground text-lg">Платформа развития когнитивных способностей</p>
             </div>
             <div className="flex items-center gap-4">
@@ -227,7 +329,7 @@ const Index = () => {
                       </div>
                     ))}
                   </div>
-                  <Button className="w-full text-lg py-6" size="lg">
+                  <Button onClick={() => setActiveGame(category.id)} className="w-full text-lg py-6" size="lg">
                     Начать тренировку
                   </Button>
                 </Card>
